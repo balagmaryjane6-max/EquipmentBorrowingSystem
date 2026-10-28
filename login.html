@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="EquipVault — Enterprise Equipment Borrowing & Management System. Sign in to access your portal.">
+  <title>EquipVault — Sign In</title>
+  <link rel="stylesheet" href="css/style.css?v=20261025_02">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23f59e0b'><path d='M20 7h-4V4c0-1.1-.9-2-2-2h-4c-1.1 0-2 .9-2 2v3H4c-1.1 0-2 .9-2 2v11c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V9c0-1.1-.9-2-2-2zM10 4h4v3h-4V4zm10 16H4V9h16v11z'/></svg>">
+</head>
+<body>
+  <div class="login-page">
+    <div class="login-card">
+
+      <!-- Brand Header -->
+      <div class="login-card-header">
+        <div class="login-logo">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+            <rect x="2" y="7" width="20" height="14" rx="2"/>
+            <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
+          </svg>
+        </div>
+        <div class="login-brand-name">Equip<span>Vault</span></div>
+        <div class="login-brand-sub">Enterprise Equipment Borrowing & Management</div>
+      </div>
+
+      <!-- Card Body -->
+      <div class="login-card-body">
+        <!-- Tabs -->
+        <div class="login-tabs">
+          <button type="button" class="login-tab-btn active" id="tab-signin">Sign In</button>
+          <button type="button" class="login-tab-btn" id="tab-register">Register Account</button>
+        </div>
+
+        <!-- Sign In View -->
+        <div id="view-signin">
+
+          <form id="form-login" autocomplete="off">
+            <div id="login-error-container"></div>
+            <div class="form-group">
+              <label class="form-label" for="login-email">Institutional Email or ID Number</label>
+              <input type="text" id="login-email" class="form-control" placeholder="e.g. 202600101, EMP20261, or user@equipvault.edu" required>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="login-password">Password</label>
+              <div class="input-with-eye">
+                <input type="password" id="login-password" class="form-control" placeholder="Enter your password" required autocomplete="current-password">
+                <button type="button" class="btn-eye" id="btn-toggle-pass" aria-label="Toggle password">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                </button>
+              </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-block btn-lg" id="btn-login" style="margin-top:8px;">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+              Sign In to EquipVault
+            </button>
+          </form>
+        </div>
+
+        <!-- Register View -->
+        <div id="view-register" style="display:none;">
+          <form id="form-register">
+            <div class="form-grid">
+
+              <!-- Account Type Selector -->
+              <div class="form-group form-full" style="margin-bottom:4px;">
+                <label class="form-label">Account Type <span class="req">*</span></label>
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:4px;">
+                  <label id="role-opt-borrower" style="display:flex; align-items:center; gap:10px; padding:12px 14px; border:2px solid var(--gold-border); border-radius:var(--radius-md); cursor:pointer; background:var(--gold-subtle); transition:all var(--t-fast);">
+                    <input type="radio" name="reg-role-type" id="reg-role-borrower" value="Borrower" checked style="accent-color:var(--gold-500); width:16px; height:16px;">
+                    <div>
+                      <div style="font-size:0.82rem; font-weight:700; color:var(--text-primary);">🎓 Borrower</div>
+                      <div style="font-size:0.68rem; color:var(--text-dim);">Student / Researcher</div>
+                    </div>
+                  </label>
+                  <label id="role-opt-staff" style="display:flex; align-items:center; gap:10px; padding:12px 14px; border:2px solid var(--border-subtle); border-radius:var(--radius-md); cursor:pointer; background:transparent; transition:all var(--t-fast);">
+                    <input type="radio" name="reg-role-type" id="reg-role-staff" value="Staff" style="accent-color:var(--gold-500); width:16px; height:16px;">
+                    <div>
+                      <div style="font-size:0.82rem; font-weight:700; color:var(--text-primary);">🔐 Staff / Admin</div>
+                      <div style="font-size:0.68rem; color:var(--text-dim);">System Administrator</div>
+                    </div>
+                  </label>
+                </div>
+              </div>
+
+              <!-- Staff Role Sub-selector (hidden unless Staff selected) -->
+              <div class="form-group form-full" id="staff-role-group" style="display:none;">
+                <label class="form-label" for="reg-staff-role">Staff Position <span class="req">*</span></label>
+                <select id="reg-staff-role" class="form-control" style="background:var(--bg-elevated); cursor:pointer;">
+                  <option value="Administrator" selected>🔑 Administrator</option>
+                  <option value="Equipment Custodian">🗝️ Equipment Custodian</option>
+                </select>
+                <div style="font-size:0.7rem; color:var(--text-dim); margin-top:4px;">* Administrators manage the full system. Custodians handle equipment release &amp; returns.</div>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="reg-fname">First Name <span class="req">*</span></label>
+                <input type="text" id="reg-fname" class="form-control" placeholder="e.g. Mary Jane" required>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="reg-mi">Middle Initial</label>
+                <input type="text" id="reg-mi" class="form-control" placeholder="e.g. F." maxlength="3" style="text-transform:uppercase;">
+              </div>
+              <div class="form-group form-full">
+                <label class="form-label" for="reg-lname">Last Name <span class="req">*</span></label>
+                <input type="text" id="reg-lname" class="form-control" placeholder="e.g. Balag" required>
+              </div>
+              <div class="form-group form-full" id="reg-error-container"></div>
+
+              <div class="form-group">
+                <label class="form-label" for="reg-id" id="label-reg-id">Student / Borrower ID <span class="req">*</span> <span style="font-size:0.65rem; color:var(--text-dim); font-weight:400;" id="id-hint">(min. 9 characters)</span></label>
+                <input type="text" id="reg-id" class="form-control" placeholder="e.g. 202600101" minlength="9" maxlength="50" required>
+                <div id="reg-id-err" class="field-error-msg" style="display:none;"></div>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="reg-dept" id="label-reg-dept">Department / Major <span class="req">*</span></label>
+                <input type="text" id="reg-dept" class="form-control" placeholder="e.g. Information Technology" required>
+              </div>
+              <div class="form-group form-full">
+                <label class="form-label" for="reg-email">Institutional Email <span class="req">*</span></label>
+                <input type="email" id="reg-email" class="form-control" placeholder="e.g. msantos@equipvault.edu" required>
+                <div id="reg-email-err" class="field-error-msg" style="display:none;"></div>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="reg-phone">Contact Mobile Number <span class="req">*</span></label>
+                <input type="tel" id="reg-phone" class="form-control" placeholder="e.g. 09631174527" required>
+                <div id="reg-phone-err" class="field-error-msg" style="display:none;"></div>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="reg-password">Create Password <span class="req">*</span></label>
+                <input type="password" id="reg-password" class="form-control" placeholder="At least 4 characters" minlength="4" required>
+                <div id="reg-pass-err" class="field-error-msg" style="display:none;"></div>
+              </div>
+            </div>
+            <button type="submit" class="btn btn-primary btn-block btn-lg" id="btn-do-register" style="margin-top:8px;">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+              <span id="reg-btn-label">Create Borrower Account</span>
+            </button>
+          </form>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div class="login-footer">
+        🔒 Secured with role-based access control &nbsp;•&nbsp; All sessions audited
+      </div>
+    </div>
+  </div>
+
+  <div class="toast-container" id="toast-container" aria-live="polite"></div>
+
+  <script src="js/storage.js?v=20261027_v4"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      await StorageService.init();
+
+      // Official session persistence: if already authenticated, go directly to assigned portal
+      const activeSession = JSON.parse(localStorage.getItem('equipvault_auth_user') || 'null');
+      if (activeSession && activeSession.role) {
+        if (activeSession.role === 'Borrower') {
+          window.location.replace('borrower.html');
+        } else {
+          window.location.replace('index.html');
+        }
+        return;
+      }
+
+      const tabSignin   = document.getElementById('tab-signin');
+      const tabRegister = document.getElementById('tab-register');
+      const viewSignin  = document.getElementById('view-signin');
+      const viewReg     = document.getElementById('view-register');
+
+      tabSignin.addEventListener('click', () => {
+        tabSignin.classList.add('active');
+        tabRegister.classList.remove('active');
+        viewSignin.style.display = 'block';
+        viewReg.style.display = 'none';
+      });
+
+      tabRegister.addEventListener('click', () => {
+        tabRegister.classList.add('active');
+        tabSignin.classList.remove('active');
+        viewReg.style.display = 'block';
+        viewSignin.style.display = 'none';
+      });
+
+      document.getElementById('btn-toggle-pass').addEventListener('click', () => {
+        const inp = document.getElementById('login-password');
+        inp.type = inp.type === 'password' ? 'text' : 'password';
+      });
+
+      const formLogin    = document.getElementById('form-login');
+      const inputLoginId = document.getElementById('login-email');
+      const inputLoginPw = document.getElementById('login-password');
+      const loginErrBox  = document.getElementById('login-error-container');
+
+      function clearLoginErrors() {
+        inputLoginId.classList.remove('is-invalid');
+        inputLoginPw.classList.remove('is-invalid');
+        if (loginErrBox) loginErrBox.innerHTML = '';
+      }
+
+      inputLoginId.addEventListener('input', clearLoginErrors);
+      inputLoginPw.addEventListener('input', clearLoginErrors);
+
+      formLogin.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        clearLoginErrors();
+        const loginId = inputLoginId.value.trim();
+        const pass    = inputLoginPw.value.trim();
+        const btn     = document.getElementById('btn-login');
+        btn.disabled  = true;
+        btn.textContent = 'Signing in…';
+        try {
+          let user;
+          if (StorageService.isApiMode) {
+            const res  = await fetch('api/auth.php', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action: 'login', email: loginId, password: pass }) });
+            const json = await res.json();
+            if (!res.ok) throw new Error(json.error || 'Invalid credentials');
+            user = json.user;
+          } else {
+            let role = 'Borrower';
+            let name = 'Student Borrower';
+            let dept = 'Information Technology';
+            let bId  = loginId.includes('@') ? 'STU-2026-001' : loginId;
+            const lowerId = loginId.toLowerCase();
+            if (lowerId.includes('admin') || lowerId.startsWith('adm') || lowerId.startsWith('emp') || loginId.length === 8) {
+              role = 'Administrator';
+              name = 'System Administrator';
+              dept = 'Equipment & Facilities IT';
+              bId  = loginId.includes('@') ? 'ADM-2026-001' : loginId;
+            } else if (lowerId.includes('custodian') || lowerId.startsWith('cst')) {
+              role = 'Equipment Custodian';
+              name = 'Elena Rostova';
+              dept = 'Media & Equipment Depot';
+              bId  = loginId.includes('@') ? 'CST-2026-002' : loginId;
+            }
+            user = { id: 'USR-' + (role==='Borrower'?'BRW-':'ADM-') + Date.now().toString().slice(-4), name, email: loginId.includes('@') ? loginId : `${lowerId}@equipvault.edu`, role, department: dept, borrower_id: bId };
+          }
+          localStorage.setItem('equipvault_auth_user', JSON.stringify(user));
+          if (user.role === 'Borrower') {
+            window.location.href = 'borrower.html';
+          } else {
+            window.location.href = 'index.html';
+          }
+        } catch (err) {
+          // Immediately turn input borders RED as a sign of incorrect information
+          inputLoginId.classList.add('is-invalid');
+          inputLoginPw.classList.add('is-invalid');
+          
+          const card = document.querySelector('.login-card');
+          if (card) {
+            card.classList.remove('shake');
+            void card.offsetWidth;
+            card.classList.add('shake');
+          }
+
+          if (loginErrBox) {
+            loginErrBox.innerHTML = `
+              <div class="login-error-alert">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="18" height="18"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                <span>${err.message || 'Incorrect Email / ID Number or Password.'}</span>
+              </div>
+            `;
+          }
+          showToast('Login Failed', err.message || 'Incorrect information entered.', 'error');
+          btn.disabled = false;
+          btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>Sign In to EquipVault';
+        }
+      });
+
+      // ===== TITLE CASE HELPER =====
+      function toTitleCase(str) {
+        return str.replace(/\w\S*/g, w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase());
+      }
+
+      // ===== ROLE TOGGLE LOGIC =====
+      const roleRadios   = document.querySelectorAll('input[name="reg-role-type"]');
+      const staffGroup   = document.getElementById('staff-role-group');
+      const optBorrower  = document.getElementById('role-opt-borrower');
+      const optStaff     = document.getElementById('role-opt-staff');
+      const regBtnLabel  = document.getElementById('reg-btn-label');
+      const labelId      = document.getElementById('label-reg-id');
+      const labelDept    = document.getElementById('label-reg-dept');
+      const inputId      = document.getElementById('reg-id');
+      const idHint       = document.getElementById('id-hint');
+      const idErr        = document.getElementById('reg-id-err');
+
+      const inputEmail   = document.getElementById('reg-email');
+      const emailErr     = document.getElementById('reg-email-err');
+      const inputPhone   = document.getElementById('reg-phone');
+      const phoneErr     = document.getElementById('reg-phone-err');
+      const inputPass    = document.getElementById('reg-password');
+      const passErr      = document.getElementById('reg-pass-err');
+      const regErrBox    = document.getElementById('reg-error-container');
+
+      function validateIdField() {
+        const val = inputId.value.trim();
+        const isStaff = document.getElementById('reg-role-staff').checked;
+        if (!val) {
+          inputId.classList.remove('is-invalid', 'is-valid');
+          if (idErr) idErr.style.display = 'none';
+          return true;
+        }
+        if (isStaff) {
+          if (val.length !== 8) {
+            inputId.classList.add('is-invalid');
+            inputId.classList.remove('is-valid');
+            if (idErr) {
+              idErr.textContent = `⚠️ Worker ID must be exactly 8 characters (currently ${val.length}/8).`;
+              idErr.style.display = 'flex';
+            }
+            return false;
+          } else {
+            inputId.classList.remove('is-invalid');
+            inputId.classList.add('is-valid');
+            if (idErr) idErr.style.display = 'none';
+            return true;
+          }
+        } else {
+          // Borrower: AT LEAST 9 CHARACTERS NEEDED! (Allow typing up to 50 characters)
+          if (val.length < 9) {
+            inputId.classList.add('is-invalid');
+            inputId.classList.remove('is-valid');
+            if (idErr) {
+              idErr.textContent = `⚠️ Borrower ID must be at least 9 characters (currently ${val.length}/9).`;
+              idErr.style.display = 'flex';
+            }
+            return false;
+          } else {
+            inputId.classList.remove('is-invalid');
+            inputId.classList.add('is-valid');
+            if (idErr) idErr.style.display = 'none';
+            return true;
+          }
+        }
+      }
+
+      function applyRoleUi(isStaff) {
+        staffGroup.style.display = isStaff ? 'block' : 'none';
+        optBorrower.style.borderColor     = isStaff ? 'var(--border-subtle)' : 'var(--gold-border)';
+        optBorrower.style.background      = isStaff ? 'transparent'          : 'var(--gold-subtle)';
+        optStaff.style.borderColor        = isStaff ? 'var(--gold-border)'   : 'var(--border-subtle)';
+        optStaff.style.background         = isStaff ? 'var(--gold-subtle)'   : 'transparent';
+        regBtnLabel.textContent = isStaff ? 'Create Staff Account' : 'Create Borrower Account';
+        if (labelDept) labelDept.childNodes[0].textContent = isStaff ? 'Department / Office '  : 'Department / Major ';
+
+        if (isStaff) {
+          labelId.childNodes[0].textContent = 'Assigned Worker ID ';
+          if (idHint) idHint.textContent = '(exactly 8 characters)';
+          inputId.placeholder = 'e.g. EMP20261';
+          inputId.minLength = 8;
+          inputId.maxLength = 8;
+        } else {
+          labelId.childNodes[0].textContent = 'Student / Borrower ID ';
+          if (idHint) idHint.textContent = '(at least 9 characters)';
+          inputId.placeholder = 'e.g. 202600101';
+          inputId.minLength = 9;
+          // Uncap maxLength so borrower can enter 9, 10, 11, etc. characters without hitting an 8-character barrier!
+          inputId.maxLength = 50;
+          inputId.removeAttribute('maxlength');
+        }
+        validateIdField();
+      }
+
+      // Initialize default role UI immediately on page load
+      applyRoleUi(false);
+
+      roleRadios.forEach(r => r.addEventListener('change', () => {
+        applyRoleUi(document.getElementById('reg-role-staff').checked);
+      }));
+
+      // Real-time input listeners to immediately show red on incorrect entry
+      inputId.addEventListener('input', validateIdField);
+
+      inputEmail.addEventListener('input', () => {
+        const val = inputEmail.value.trim();
+        if (!val) {
+          inputEmail.classList.remove('is-invalid', 'is-valid');
+          if (emailErr) emailErr.style.display = 'none';
+          return;
+        }
+        const valid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val);
+        inputEmail.classList.toggle('is-invalid', !valid);
+        inputEmail.classList.toggle('is-valid', valid);
+        if (emailErr) {
+          emailErr.textContent = valid ? '' : '⚠️ Please enter a valid email address (e.g. user@domain.com)';
+          emailErr.style.display = valid ? 'none' : 'flex';
+        }
+      });
+
+      inputPhone.addEventListener('input', () => {
+        const val = inputPhone.value.trim().replace(/\D/g, '');
+        if (!inputPhone.value.trim()) {
+          inputPhone.classList.remove('is-invalid', 'is-valid');
+          if (phoneErr) phoneErr.style.display = 'none';
+          return;
+        }
+        const valid = val.length >= 10;
+        inputPhone.classList.toggle('is-invalid', !valid);
+        inputPhone.classList.toggle('is-valid', valid);
+        if (phoneErr) {
+          phoneErr.textContent = valid ? '' : `⚠️ Mobile number must have at least 10 digits (currently ${val.length}/10)`;
+          phoneErr.style.display = valid ? 'none' : 'flex';
+        }
+      });
+
+      inputPass.addEventListener('input', () => {
+        const val = inputPass.value;
+        if (!val) {
+          inputPass.classList.remove('is-invalid', 'is-valid');
+          if (passErr) passErr.style.display = 'none';
+          return;
+        }
+        const valid = val.length >= 4;
+        inputPass.classList.toggle('is-invalid', !valid);
+        inputPass.classList.toggle('is-valid', valid);
+        if (passErr) {
+          passErr.textContent = valid ? '' : '⚠️ Password must be at least 4 characters';
+          passErr.style.display = valid ? 'none' : 'flex';
+        }
+      });
+
+      document.getElementById('form-register').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        if (regErrBox) regErrBox.innerHTML = '';
+
+        const rawFirst   = document.getElementById('reg-fname').value.trim();
+        const rawMI      = document.getElementById('reg-mi').value.trim().toUpperCase();
+        const rawLast    = document.getElementById('reg-lname').value.trim();
+        const email      = inputEmail.value.trim();
+        const borrowerId = inputId.value.trim();
+        const dept       = document.getElementById('reg-dept').value.trim();
+        const phone      = inputPhone.value.trim();
+        const pass       = inputPass.value.trim();
+        const isStaff    = document.getElementById('reg-role-staff').checked;
+        const staffRole  = isStaff ? document.getElementById('reg-staff-role').value : 'Borrower';
+
+        // Check ID validation
+        if (!validateIdField()) {
+          inputId.focus();
+          return;
+        }
+
+        // Validate phone
+        const cleanP = phone.replace(/\D/g, '');
+        if (!phone || cleanP.length < 10) {
+          inputPhone.classList.add('is-invalid');
+          if (phoneErr) {
+            phoneErr.textContent = '⚠️ Valid contact mobile number (at least 10 digits) is required.';
+            phoneErr.style.display = 'flex';
+          }
+          inputPhone.focus();
+          return;
+        }
+
+        // Assemble full name in Title Case: "Mary Jane F. Balag"
+        const firstName = toTitleCase(rawFirst);
+        const lastName  = toTitleCase(rawLast);
+        let mi = rawMI.replace(/\./g, '');
+        const middlePart = mi ? ` ${mi.charAt(0)}.` : '';
+        const name = `${firstName}${middlePart} ${lastName}`;
+
+        try {
+          let user;
+          if (StorageService.isApiMode) {
+            const payload = { action: 'register', name, email, password: pass, borrower_id: borrowerId, department: dept, phone };
+            if (isStaff) payload.role = staffRole;
+            const res = await fetch('api/auth.php', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+            const json = await res.json();
+            if (!res.ok) throw new Error(json.error || 'Registration failed');
+            user = json.user;
+          } else {
+            const registeredUsers = JSON.parse(localStorage.getItem('equipvault_local_users') || '[]');
+            if (registeredUsers.some(u => u.email.toLowerCase() === email.toLowerCase())) {
+              inputEmail.classList.add('is-invalid');
+              throw new Error('This email address is already registered. Duplicate emails cannot be accepted.');
+            }
+            if (cleanP && registeredUsers.some(u => (u.phone || '').replace(/\D/g, '') === cleanP)) {
+              inputPhone.classList.add('is-invalid');
+              throw new Error('This mobile number is already registered to another account. Duplicate mobile numbers cannot be accepted.');
+            }
+            let idPrefix = 'USR-BRW-';
+            if (isStaff) {
+              idPrefix = staffRole === 'Equipment Custodian' ? 'USR-CST-' : 'USR-ADM-';
+            }
+            user = { id: idPrefix + Date.now(), name, email, role: staffRole, department: dept, borrower_id: borrowerId, phone };
+            registeredUsers.push(user);
+            localStorage.setItem('equipvault_local_users', JSON.stringify(registeredUsers));
+          }
+          localStorage.setItem('equipvault_auth_user', JSON.stringify(user));
+          showToast('Account Created', `Welcome, ${name}! Redirecting…`, 'success');
+          setTimeout(() => {
+            if (user.role === 'Borrower') { window.location.href = 'borrower.html'; }
+            else                           { window.location.href = 'index.html'; }
+          }, 800);
+        } catch (err) {
+          const card = document.querySelector('.login-card');
+          if (card) {
+            card.classList.remove('shake');
+            void card.offsetWidth;
+            card.classList.add('shake');
+          }
+
+          const errMsg = err.message || 'Registration error occurred.';
+          if (errMsg.toLowerCase().includes('email')) {
+            inputEmail.classList.add('is-invalid');
+            if (emailErr) { emailErr.textContent = `⚠️ ${errMsg}`; emailErr.style.display = 'flex'; }
+            inputEmail.focus();
+          } else if (errMsg.toLowerCase().includes('mobile') || errMsg.toLowerCase().includes('phone')) {
+            inputPhone.classList.add('is-invalid');
+            if (phoneErr) { phoneErr.textContent = `⚠️ ${errMsg}`; phoneErr.style.display = 'flex'; }
+            inputPhone.focus();
+          } else if (errMsg.toLowerCase().includes('id')) {
+            inputId.classList.add('is-invalid');
+            if (idErr) { idErr.textContent = `⚠️ ${errMsg}`; idErr.style.display = 'flex'; }
+            inputId.focus();
+          }
+
+          if (regErrBox) {
+            regErrBox.innerHTML = `
+              <div class="login-error-alert">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="18" height="18"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                <span>${errMsg}</span>
+              </div>
+            `;
+          }
+          showToast('Registration Error', errMsg, 'error');
+        }
+      });
+
+      function showToast(title, msg, type = 'success') {
+        const tc = document.getElementById('toast-container');
+        const t = document.createElement('div');
+        t.className = `toast toast-${type}`;
+        const icons = { success: '✓', error: '✕', warning: '⚠', info: 'ℹ' };
+        t.innerHTML = `<div class="toast-icon">${icons[type] || '✓'}</div><div class="toast-content"><div class="toast-title">${title}</div><div class="toast-msg">${msg}</div></div>`;
+        tc.appendChild(t);
+        setTimeout(() => { t.style.opacity = '0'; t.style.transform = 'translateX(20px)'; t.style.transition = 'all 0.3s'; setTimeout(() => t.remove(), 300); }, 4000);
+      }
+    });
+  </script>
+</body>
+</html>

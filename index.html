@@ -1,0 +1,917 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="EquipVault — Enterprise Equipment Borrowing & Management System. Manage equipment, requests, returns and reports.">
+  <title>EquipVault — Admin & Custodian Portal</title>
+  <link rel="stylesheet" href="css/style.css?v=20261025_02">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23f59e0b'><path d='M20 7h-4V4c0-1.1-.9-2-2-2h-4c-1.1 0-2 .9-2 2v3H4c-1.1 0-2 .9-2 2v11c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V9c0-1.1-.9-2-2-2zM10 4h4v3h-4V4zm10 16H4V9h16v11z'/></svg>">
+  <style>
+    /* Direct Receipt Theme Overrides */
+    #modal-receipt .receipt-sheet {
+      background: var(--bg-surface, #13161d) !important;
+      color: var(--text-primary, #f1f5f9) !important;
+      border: 1px solid var(--border-medium, rgba(255,255,255,0.12)) !important;
+    }
+    #modal-receipt h2 {
+      color: var(--text-primary, #ffffff) !important;
+    }
+    #modal-receipt .receipt-header p {
+      color: var(--text-secondary, #94a3b8) !important;
+    }
+    #modal-receipt .receipt-table th {
+      background: var(--bg-elevated, #22263a) !important;
+      color: var(--gold-400, #fbbf24) !important;
+    }
+    #modal-receipt .receipt-table td {
+      background: var(--bg-card, #1a1d27) !important;
+      color: var(--text-primary, #f1f5f9) !important;
+    }
+    #modal-receipt .receipt-table td strong {
+      color: var(--text-primary, #ffffff) !important;
+    }
+    #modal-receipt .signature-line {
+      color: var(--text-secondary, #94a3b8) !important;
+    }
+    #modal-receipt .signature-line strong {
+      color: var(--text-primary, #ffffff) !important;
+    }
+    [data-theme="light"] #modal-receipt .receipt-sheet {
+      background: #ffffff !important;
+      color: #0f172a !important;
+    }
+    [data-theme="light"] #modal-receipt h2 {
+      color: #0f172a !important;
+    }
+    [data-theme="light"] #modal-receipt .receipt-table th {
+      background: #f1f5f9 !important;
+      color: #b45309 !important;
+    }
+    [data-theme="light"] #modal-receipt .receipt-table td {
+      background: #ffffff !important;
+      color: #0f172a !important;
+    }
+    [data-theme="light"] #modal-receipt .receipt-table td strong {
+      color: #0f172a !important;
+    }
+  </style>
+</head>
+<body>
+<div class="app-shell">
+
+  <!-- ===================== SIDEBAR ===================== -->
+  <aside class="sidebar" id="sidebar">
+    <a class="sidebar-brand" href="#">
+      <div class="sidebar-brand-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+          <rect x="2" y="7" width="20" height="14" rx="2"/>
+          <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
+        </svg>
+      </div>
+      <div class="sidebar-brand-text">
+        <div class="sidebar-brand-name">EquipVault</div>
+        <div class="sidebar-brand-sub">Admin & Custodian Portal</div>
+      </div>
+    </a>
+
+    <nav class="sidebar-nav">
+      <span class="nav-section-label">Overview</span>
+
+      <button class="nav-tab active" data-tab="dashboard" id="nav-dashboard">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+        Dashboard
+      </button>
+
+      <span class="nav-section-label">Inventory</span>
+
+      <button class="nav-tab" data-tab="equipment" id="nav-equipment">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
+        Equipment
+        <span class="nav-badge" id="badge-equipment"></span>
+      </button>
+
+      <span class="nav-section-label">Transactions</span>
+
+      <button class="nav-tab" data-tab="requests" id="nav-requests">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
+        Requests
+        <span class="nav-badge" id="badge-requests"></span>
+      </button>
+
+      <button class="nav-tab" data-tab="returns" id="nav-returns">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 14 4 9 9 4"/><path d="M20 20v-7a4 4 0 0 0-4-4H4"/></svg>
+        Returns
+        <span class="nav-badge" id="badge-returns"></span>
+      </button>
+
+      <button class="nav-tab" data-tab="overdue" id="nav-overdue">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 14 14"/></svg>
+        Due Dates
+        <span class="nav-badge" id="badge-overdue"></span>
+      </button>
+
+      <span class="nav-section-label">Reports</span>
+
+      <button class="nav-tab" data-tab="history" id="nav-history">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        History & Reports
+      </button>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="sidebar-user-card" id="sidebar-user-card">
+        <div class="sidebar-avatar" id="sidebar-avatar">EV</div>
+        <div class="sidebar-user-info">
+          <div class="sidebar-user-name" id="sidebar-user-name">Loading…</div>
+          <div class="sidebar-user-role" id="sidebar-user-role">—</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ===================== MAIN ===================== -->
+  <div class="main-content">
+
+    <!-- Header -->
+    <header class="app-header">
+      <div class="header-left">
+        <div class="header-chips">
+          <button class="header-chip chip-overdue" id="chip-overdue" style="display:none;">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            <span id="chip-overdue-text">0 Overdue</span>
+          </button>
+          <button class="header-chip chip-pending" id="chip-pending" style="display:none;">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 14 14"/></svg>
+            <span id="chip-pending-text">0 Pending</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="header-right">
+        <button class="header-icon-btn" id="btn-theme" title="Toggle theme">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+        </button>
+        <div class="header-user-btn" id="header-user-btn">
+          <div class="header-avatar" id="header-avatar">EV</div>
+          <div class="header-user-info">
+            <div class="header-user-name" id="header-user-name">Guest</div>
+            <div class="header-user-role" id="header-user-role">Not signed in</div>
+          </div>
+        </div>
+        <button class="btn btn-danger btn-sm" id="btn-logout" title="Sign out">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- Page Content -->
+    <main class="page-content">
+
+      <!-- ===================== DASHBOARD ===================== -->
+      <section class="view-section active" id="view-dashboard">
+        <div class="page-header">
+          <div>
+            <h1 class="page-title">Dashboard</h1>
+            <p class="page-subtitle">Real-time overview of your equipment inventory and borrowing activity.</p>
+          </div>
+          <div class="page-actions">
+            <button class="btn btn-secondary btn-sm" id="btn-dashboard-refresh">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+              Refresh
+            </button>
+          </div>
+        </div>
+
+        <!-- Overdue Alert -->
+        <div class="alert-banner alert-overdue" id="overdue-banner">
+          <div class="alert-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          </div>
+          <div class="alert-text">
+            <div class="alert-title" id="overdue-banner-title">Overdue Items Detected</div>
+            <div class="alert-desc" id="overdue-banner-desc">Immediate action required — review overdue loans and contact borrowers.</div>
+          </div>
+          <button class="btn btn-danger btn-sm" id="btn-view-overdue">View Overdue</button>
+        </div>
+
+        <!-- KPI Cards -->
+        <div class="kpi-grid">
+          <div class="kpi-card kpi-gold">
+            <div class="kpi-header">
+              <div class="kpi-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
+              </div>
+              <span class="kpi-label">Total Equipment</span>
+            </div>
+            <div class="kpi-value" id="kpi-total">—</div>
+            <div class="kpi-progress-track"><div class="kpi-progress-fill" id="kpi-total-bar" style="width:100%"></div></div>
+            <div class="kpi-meta">All registered items in inventory</div>
+          </div>
+
+          <div class="kpi-card kpi-green">
+            <div class="kpi-header">
+              <div class="kpi-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+              </div>
+              <span class="kpi-label">Available</span>
+            </div>
+            <div class="kpi-value" id="kpi-available">—</div>
+            <div class="kpi-progress-track"><div class="kpi-progress-fill" id="kpi-available-bar" style="width:0%"></div></div>
+            <div class="kpi-meta"><span id="kpi-availability-rate">0</span>% availability rate</div>
+          </div>
+
+          <div class="kpi-card kpi-blue">
+            <div class="kpi-header">
+              <div class="kpi-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+              </div>
+              <span class="kpi-label">Borrowed</span>
+            </div>
+            <div class="kpi-value" id="kpi-borrowed">—</div>
+            <div class="kpi-progress-track"><div class="kpi-progress-fill" id="kpi-borrowed-bar" style="width:0%"></div></div>
+            <div class="kpi-meta">Active loans in circulation</div>
+          </div>
+
+          <div class="kpi-card kpi-red">
+            <div class="kpi-header">
+              <div class="kpi-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 14 14"/></svg>
+              </div>
+              <span class="kpi-label">Overdue</span>
+            </div>
+            <div class="kpi-value" id="kpi-overdue">—</div>
+            <div class="kpi-progress-track"><div class="kpi-progress-fill" id="kpi-overdue-bar" style="width:0%"></div></div>
+            <div class="kpi-meta">Past expected return date</div>
+          </div>
+
+          <div class="kpi-card kpi-purple">
+            <div class="kpi-header">
+              <div class="kpi-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+              </div>
+              <span class="kpi-label">Maintenance</span>
+            </div>
+            <div class="kpi-value" id="kpi-maintenance">—</div>
+            <div class="kpi-progress-track"><div class="kpi-progress-fill" id="kpi-maintenance-bar" style="width:0%"></div></div>
+            <div class="kpi-meta">Items under servicing</div>
+          </div>
+
+          <div class="kpi-card kpi-gold">
+            <div class="kpi-header">
+              <div class="kpi-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+              </div>
+              <span class="kpi-label">Pending Requests</span>
+            </div>
+            <div class="kpi-value" id="kpi-pending">—</div>
+            <div class="kpi-progress-track"><div class="kpi-progress-fill" id="kpi-pending-bar" style="width:0%"></div></div>
+            <div class="kpi-meta">Awaiting admin approval</div>
+          </div>
+        </div>
+
+        <!-- Dashboard Grid -->
+        <div class="dashboard-grid">
+          <!-- Active Loans -->
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+                Active Loans
+              </div>
+              <button class="btn btn-ghost btn-sm" id="btn-view-all-loans">View All →</button>
+            </div>
+            <div id="dash-active-loans">
+              <div class="empty-state">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 14 14"/></svg>
+                <h3>No Active Loans</h3>
+                <p>All equipment has been returned to storage.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Sidebar stats -->
+          <div style="display:flex; flex-direction:column; gap:16px;">
+            <!-- Category breakdown -->
+            <div class="card">
+              <div class="card-header">
+                <div class="card-title">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+                  By Category
+                </div>
+              </div>
+              <div class="card-body" id="dash-category-breakdown">
+                <p class="text-muted" style="font-size:0.8rem;">Loading…</p>
+              </div>
+            </div>
+
+            <!-- Recent Activity -->
+            <div class="card">
+              <div class="card-header">
+                <div class="card-title">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+                  Recent Activity
+                </div>
+              </div>
+              <div class="card-body" id="dash-activity-stream">
+                <p class="text-muted" style="font-size:0.8rem;">Loading…</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===================== EQUIPMENT ===================== -->
+      <section class="view-section" id="view-equipment">
+        <div class="page-header">
+          <div>
+            <h1 class="page-title">Equipment Catalog</h1>
+            <p class="page-subtitle">Browse, manage and register equipment items in the inventory.</p>
+          </div>
+          <div class="page-actions">
+            <button class="btn btn-primary btn-sm" id="btn-add-equipment">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              Register New Equipment
+            </button>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="toolbar">
+            <div class="search-wrap">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+              <input type="text" class="search-input" id="eq-search" placeholder="Search equipment name, ID…">
+            </div>
+            <select class="filter-select" id="eq-cat-filter">
+              <option value="All">All Categories</option>
+              <option value="Computing">Computing</option>
+              <option value="Media & AV">Media & AV</option>
+              <option value="Laboratory">Laboratory</option>
+              <option value="Robotics">Robotics</option>
+              <option value="Audio">Audio</option>
+              <option value="Other">Other</option>
+            </select>
+            <select class="filter-select" id="eq-status-filter">
+              <option value="All">All Status</option>
+              <option value="Available">Available</option>
+              <option value="Borrowed">Borrowed</option>
+              <option value="Under Maintenance">Maintenance</option>
+            </select>
+            <select class="filter-select" id="eq-cond-filter">
+              <option value="All">All Conditions</option>
+              <option value="Excellent">Excellent</option>
+              <option value="Good">Good</option>
+              <option value="Fair">Fair</option>
+              <option value="Needs Repair">Needs Repair</option>
+            </select>
+            <div class="view-toggle">
+              <button class="view-toggle-btn active" id="btn-grid-view" title="Grid view">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+              </button>
+              <button class="view-toggle-btn" id="btn-list-view" title="List view">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+              </button>
+            </div>
+          </div>
+          <div id="equipment-container" class="equipment-grid" style="padding:16px;"></div>
+        </div>
+      </section>
+
+      <!-- ===================== REQUESTS ===================== -->
+      <section class="view-section" id="view-requests">
+        <div class="page-header">
+          <div>
+            <h1 class="page-title" id="requests-page-title">Borrowing Requests</h1>
+            <p class="page-subtitle">Review, approve or reject equipment borrowing requests.</p>
+          </div>
+          <div class="page-actions"></div>
+        </div>
+
+        <div class="card">
+          <div class="toolbar">
+            <div class="search-wrap">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+              <input type="text" class="search-input" id="req-search" placeholder="Search borrower, equipment…">
+            </div>
+            <select class="filter-select" id="req-status-filter">
+              <option value="All">All Status</option>
+              <option value="Pending">Pending</option>
+              <option value="Approved">Approved</option>
+              <option value="Active">Active Loan</option>
+              <option value="Returned">Returned</option>
+              <option value="Rejected">Rejected</option>
+            </select>
+          </div>
+          <div class="table-wrapper">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Request ID</th>
+                  <th>Equipment</th>
+                  <th>Borrower</th>
+                  <th>Borrow Period</th>
+                  <th>Purpose</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="requests-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===================== RETURNS ===================== -->
+      <section class="view-section" id="view-returns">
+        <div class="page-header">
+          <div>
+            <h1 class="page-title">Return Management</h1>
+            <p class="page-subtitle">Process equipment returns, inspect condition and update inventory.</p>
+          </div>
+          <div class="page-actions">
+            <span class="badge badge-borrowed" id="returns-active-count">0 Active Loans</span>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 14 4 9 9 4"/><path d="M20 20v-7a4 4 0 0 0-4-4H4"/></svg>
+              Active Loans — Pending Return
+            </div>
+          </div>
+          <div class="table-wrapper">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Request ID</th>
+                  <th>Equipment</th>
+                  <th>Borrower</th>
+                  <th>Borrowed On</th>
+                  <th>Due Date</th>
+                  <th>Status</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="returns-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===================== OVERDUE ===================== -->
+      <section class="view-section" id="view-overdue">
+        <div class="page-header">
+          <div>
+            <h1 class="page-title">Due Date Tracking</h1>
+            <p class="page-subtitle">Monitor all active loans with upcoming and overdue return dates.</p>
+          </div>
+          <div class="page-actions">
+            <button class="btn btn-secondary btn-sm" id="btn-send-reminders">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+              Send All Reminders
+            </button>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="table-wrapper">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Request ID</th>
+                  <th>Equipment</th>
+                  <th>Borrower</th>
+                  <th>Contact</th>
+                  <th>Due Date</th>
+                  <th>Status</th>
+                  <th>Time Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="overdue-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===================== HISTORY ===================== -->
+      <section class="view-section" id="view-history">
+        <div class="page-header">
+          <div>
+            <h1 class="page-title">Borrowing History & Reports</h1>
+            <p class="page-subtitle">Complete audit trail of all equipment transactions.</p>
+          </div>
+          <div class="page-actions">
+            <button class="btn btn-secondary btn-sm" id="btn-export-csv">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              Export CSV
+            </button>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="toolbar">
+            <div class="search-wrap">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+              <input type="text" class="search-input" id="hist-search" placeholder="Search borrower, equipment ID…">
+            </div>
+            <select class="filter-select" id="hist-cond-filter">
+              <option value="All">All Return Conditions</option>
+              <option value="Excellent">Excellent</option>
+              <option value="Good">Good</option>
+              <option value="Fair">Fair</option>
+              <option value="Needs Repair">Needs Repair</option>
+            </select>
+          </div>
+          <div class="table-wrapper">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Return ID</th>
+                  <th>Request ID</th>
+                  <th>Equipment</th>
+                  <th>Borrower</th>
+                  <th>Borrowed</th>
+                  <th>Returned</th>
+                  <th>Condition</th>
+                  <th>Received By</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="history-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+</div>
+
+<!-- ===================== MODALS ===================== -->
+
+<!-- Equipment Modal -->
+<div class="modal-backdrop" id="modal-equipment">
+  <div class="modal-panel modal-panel-lg">
+    <div class="modal-header">
+      <div class="modal-title">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
+        <span id="modal-eq-title">Register New Equipment</span>
+      </div>
+      <button class="modal-close" data-close="modal-equipment"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    </div>
+    <div class="modal-body">
+      <form id="form-equipment">
+        <input type="hidden" id="eq-is-edit" value="false">
+        <div class="form-grid">
+          <div class="form-group">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+              <label class="form-label" for="eq-id" style="margin-bottom:0;">Equipment ID <span style="font-size:0.7rem; color:var(--gold-400); font-weight:normal;">(Auto-Generated)</span></label>
+              <button type="button" class="btn btn-secondary btn-sm" id="btn-gen-eq-id" title="Generate New ID" style="padding:4px 10px; font-size:0.78rem; color:var(--gold-400);">
+                🔄 Re-roll ID
+              </button>
+            </div>
+            <input type="text" id="eq-id" class="form-control" placeholder="Auto-generated" readonly required style="font-family:'Courier New', monospace; font-weight:700; color:var(--gold-400); background:var(--bg-elevated); cursor:not-allowed;">
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="eq-name">Equipment Name <span class="req">*</span></label>
+            <input type="text" id="eq-name" class="form-control" placeholder="e.g. Sony Cinema FX6 / Dell Precision Workstation" required autofocus>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="eq-category">Category <span class="req">*</span></label>
+            <select id="eq-category" class="form-control" required>
+              <option value="Computing">Computing</option>
+              <option value="Media & AV">Media & AV</option>
+              <option value="Laboratory">Laboratory</option>
+              <option value="Robotics">Robotics</option>
+              <option value="Audio">Audio</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="eq-condition">Initial Condition <span class="req">*</span></label>
+            <select id="eq-condition" class="form-control" required>
+              <option value="Excellent">Excellent — Pristine / Brand New</option>
+              <option value="Good" selected>Good — Fully functional</option>
+              <option value="Fair">Fair — Functional with wear</option>
+              <option value="Needs Repair">Needs Repair — Maintenance required</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="eq-status">Availability Status <span class="req">*</span></label>
+            <select id="eq-status" class="form-control" required>
+              <option value="Available" selected>Available for Borrowing</option>
+              <option value="Under Maintenance">Under Maintenance</option>
+              <option value="Borrowed">Borrowed</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="eq-total-units">Number of Units (Stock Limitation) <span class="req">*</span></label>
+            <input type="number" id="eq-total-units" class="form-control" min="1" max="9999" value="1" placeholder="e.g. 1, 5, 10" required>
+            <span style="font-size:0.71rem; color:var(--text-dim); margin-top:3px; display:block;">Unit limit stock / total inventory capacity.</span>
+          </div>
+          <div class="form-group" id="wrap-eq-available-units" style="display:none;">
+            <label class="form-label" for="eq-available-units">Available Units in Stock</label>
+            <input type="number" id="eq-available-units" class="form-control" min="0" max="9999" value="1" placeholder="Available units">
+            <span style="font-size:0.71rem; color:var(--text-dim); margin-top:3px; display:block;">Current free units ready for borrowing.</span>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="eq-serial">Serial Number / Asset Tag</label>
+            <input type="text" id="eq-serial" class="form-control" placeholder="e.g. SN-2026-99042">
+          </div>
+          <div class="form-group form-full">
+            <label class="form-label" for="eq-location">Storage Location <span class="req">*</span></label>
+            <input type="text" id="eq-location" class="form-control" placeholder="e.g. Main IT Cage - Shelf A2" value="Main IT Cage - Shelf A1">
+          </div>
+
+          <!-- PHOTO PASTE & UPLOAD ZONE -->
+          <div class="form-group form-full">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+              <label class="form-label" style="margin-bottom:0;">Equipment Photo</label>
+              <span class="paste-hint-pill">📋 Tip: Press <kbd style="font-family:inherit; background:var(--bg-elevated); padding:1px 5px; border-radius:3px; color:var(--text-primary); font-weight:700;">Ctrl + V</kbd> to paste photo</span>
+            </div>
+
+            <div class="photo-drop-zone" id="eq-photo-dropzone">
+              <input type="file" id="eq-file-input" accept="image/*" style="display:none;">
+              <input type="hidden" id="eq-photo-data" value="assets/images/laptop.jpg">
+
+              <!-- Image Preview Container -->
+              <div id="eq-photo-preview-wrap" style="display:flex; flex-direction:column; align-items:center; gap:10px; width:100%;">
+                <img id="eq-preview-img" src="assets/images/laptop.jpg" alt="Equipment preview" style="max-height:160px; max-width:100%; border-radius:var(--radius-md); object-fit:contain; border:1px solid var(--border-medium); box-shadow:var(--shadow-sm);">
+                <div style="display:flex; gap:8px;">
+                  <button type="button" class="btn btn-secondary btn-sm" id="btn-browse-photo">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                    Browse File
+                  </button>
+                  <button type="button" class="btn btn-ghost btn-sm" id="btn-toggle-presets" style="font-size:0.75rem; color:var(--text-dim); text-decoration:underline;">
+                    Stock Presets / Link
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Collapsible stock presets or custom URL -->
+            <div id="eq-photo-presets-wrap" style="display:none; margin-top:10px; padding:12px; background:var(--bg-elevated); border-radius:var(--radius-md); border:1px solid var(--border-subtle);">
+              <label class="form-label" style="font-size:0.72rem;">Choose a stock library photo or enter image URL:</label>
+              <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:8px;">
+                <select id="eq-image-preset" class="form-control">
+                  <option value="">— Stock Photo Presets —</option>
+                  <option value="assets/images/laptop.jpg">💻 Laptop / Computing</option>
+                  <option value="assets/images/camera.jpg">📷 Cinema Camera / Media</option>
+                  <option value="assets/images/lab.jpg">🔬 Oscilloscope / Lab</option>
+                  <option value="assets/images/drone.jpg">🚁 Survey Drone / Robotics</option>
+                </select>
+                <input type="url" id="eq-custom-image-url" class="form-control" placeholder="Direct URL (https://…)">
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group form-full">
+            <label class="form-label" for="eq-description">Description & Technical Specifications</label>
+            <textarea id="eq-description" class="form-control" placeholder="Detailed specs, included accessories (cables, case, charger), and special instructions…"></textarea>
+          </div>
+        </div>
+
+        <div class="modal-footer" style="padding:0; margin-top:16px; border:none; display:flex; justify-content:flex-end; gap:8px;">
+          <button type="button" class="btn btn-secondary" data-close="modal-equipment">Cancel</button>
+          <button type="submit" class="btn btn-primary" id="btn-save-equipment">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+            Save Equipment
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Borrow Request Modal -->
+<div class="modal-backdrop" id="modal-request">
+  <div class="modal-panel modal-panel-lg">
+    <div class="modal-header">
+      <div class="modal-title">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
+        Submit Borrowing Request
+      </div>
+      <button class="modal-close" data-close="modal-request"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    </div>
+    <div class="modal-body">
+      <form id="form-request">
+        <div class="form-grid">
+          <div class="form-group form-full">
+            <label class="form-label" for="req-equipment-id">Select Equipment <span class="req">*</span></label>
+            <select id="req-equipment-id" class="form-control" required></select>
+          </div>
+          <div class="form-group form-full">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+              <label class="form-label" for="req-units" style="margin-bottom:0;">Number of Units to Borrow <span class="req">*</span></label>
+              <span id="req-stock-hint" style="font-size:0.74rem; color:var(--gold-400); font-weight:600;">Stock Limit: Select equipment above</span>
+            </div>
+            <input type="number" id="req-units" class="form-control" min="1" max="1" value="1" required>
+            <span style="font-size:0.71rem; color:var(--text-dim); margin-top:3px; display:block;">Subject to unit limitation stock available for loan.</span>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="req-borrower-name">Borrower Full Name <span class="req">*</span></label>
+            <input type="text" id="req-borrower-name" class="form-control" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="req-borrower-id">Student / Staff ID <span class="req">*</span></label>
+            <input type="text" id="req-borrower-id" class="form-control" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="req-email">Email Address <span class="req">*</span></label>
+            <input type="email" id="req-email" class="form-control" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="req-phone">Contact Number</label>
+            <input type="text" id="req-phone" class="form-control">
+          </div>
+          <div class="form-group form-full">
+            <label class="form-label" for="req-dept">Department / College <span class="req">*</span></label>
+            <input type="text" id="req-dept" class="form-control" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="req-borrow-date">Borrow Date <span class="req">*</span></label>
+            <input type="datetime-local" id="req-borrow-date" class="form-control" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="req-return-date">Expected Return Date <span class="req">*</span></label>
+            <input type="datetime-local" id="req-return-date" class="form-control" required>
+          </div>
+          <div class="form-group form-full">
+            <label class="form-label" for="req-purpose">Purpose / Justification <span class="req">*</span></label>
+            <textarea id="req-purpose" class="form-control" placeholder="Describe the intended use and academic purpose…" required></textarea>
+          </div>
+        </div>
+        <div class="modal-footer" style="padding:0; margin-top:16px; border:none;">
+          <button type="button" class="btn btn-secondary" data-close="modal-request">Cancel</button>
+          <button type="submit" class="btn btn-primary">Submit Request</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Approval Modal -->
+<div class="modal-backdrop" id="modal-approval">
+  <div class="modal-panel modal-panel-sm">
+    <div class="modal-header">
+      <div class="modal-title">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+        <span id="modal-approval-title">Approve Request</span>
+      </div>
+      <button class="modal-close" data-close="modal-approval"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    </div>
+    <div class="modal-body">
+      <div id="approval-req-summary" style="margin-bottom:16px; padding:12px; background:var(--bg-elevated); border-radius:var(--radius-md); border:1px solid var(--border-subtle);"></div>
+      <form id="form-approval">
+        <input type="hidden" id="approval-req-id">
+        <input type="hidden" id="approval-action-type">
+        <div class="form-group">
+          <label class="form-label" for="approval-notes" id="label-approval-notes">Approval Notes</label>
+          <textarea id="approval-notes" class="form-control" rows="3"></textarea>
+        </div>
+        <div class="modal-footer" style="padding:0; margin-top:12px; border:none;">
+          <button type="button" class="btn btn-secondary" data-close="modal-approval">Cancel</button>
+          <button type="submit" class="btn btn-success" id="btn-confirm-approval">Confirm Approval</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Return Modal -->
+<div class="modal-backdrop" id="modal-return">
+  <div class="modal-panel modal-panel-sm">
+    <div class="modal-header">
+      <div class="modal-title">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 14 4 9 9 4"/><path d="M20 20v-7a4 4 0 0 0-4-4H4"/></svg>
+        Process Equipment Return
+      </div>
+      <button class="modal-close" data-close="modal-return"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    </div>
+    <div class="modal-body">
+      <div id="return-req-summary" style="margin-bottom:16px; padding:12px; background:var(--bg-elevated); border-radius:var(--radius-md); border:1px solid var(--border-subtle);"></div>
+      <form id="form-return">
+        <input type="hidden" id="return-req-id">
+        <div class="form-group">
+          <label class="form-label" for="return-actual-date">Actual Return Date/Time <span class="req">*</span></label>
+          <input type="datetime-local" id="return-actual-date" class="form-control" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="return-condition">Condition on Return <span class="req">*</span></label>
+          <select id="return-condition" class="form-control" required>
+            <option value="Excellent">Excellent — Pristine condition</option>
+            <option value="Good">Good — Minor wear, fully functional</option>
+            <option value="Fair">Fair — Noticeable wear, still operational</option>
+            <option value="Needs Repair">Needs Repair — Damage or malfunction</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="return-notes">Custodian Remarks</label>
+          <textarea id="return-notes" class="form-control" rows="3" placeholder="Note any accessories, damage, or missing components…"></textarea>
+        </div>
+        <div class="modal-footer" style="padding:0; margin-top:12px; border:none;">
+          <button type="button" class="btn btn-secondary" data-close="modal-return">Cancel</button>
+          <button type="submit" class="btn btn-primary">Confirm Return</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Item Details Modal -->
+<div class="modal-backdrop" id="modal-details">
+  <div class="modal-panel">
+    <div class="modal-header">
+      <div class="modal-title">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+        <span id="modal-details-name">Equipment Details</span>
+      </div>
+      <button class="modal-close" data-close="modal-details"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    </div>
+    <div class="modal-body" id="modal-details-body"></div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" data-close="modal-details">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- Receipt Modal -->
+<div class="modal-backdrop" id="modal-receipt">
+  <div class="modal-panel modal-panel-lg">
+    <div class="modal-header">
+      <div class="modal-title">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+        Transaction Receipt
+      </div>
+      <button class="modal-close" data-close="modal-receipt"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    </div>
+    <div class="modal-body" id="modal-receipt-content"></div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" data-close="modal-receipt">Close</button>
+      <button class="btn btn-primary" id="btn-print-receipt">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+        Print Receipt
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Official User Account & Security Profile Modal -->
+<div class="modal-backdrop" id="modal-profile">
+  <div class="modal-panel modal-panel-sm">
+    <div class="modal-header">
+      <div class="modal-title">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        Institutional Staff Profile
+      </div>
+      <button class="modal-close" data-close="modal-profile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    </div>
+    <div class="modal-body">
+      <div style="display:flex; align-items:center; gap:16px; padding:16px; background:var(--bg-elevated); border:1px solid var(--border-subtle); border-radius:var(--radius-lg); margin-bottom:18px;">
+        <div id="modal-profile-avatar" style="width:52px; height:52px; border-radius:50%; background:linear-gradient(135deg,var(--gold-600),var(--gold-400)); color:#000; font-size:1.1rem; font-weight:800; display:flex; align-items:center; justify-content:center; flex-shrink:0;">SA</div>
+        <div>
+          <div style="font-size:1.05rem; font-weight:800; color:var(--text-primary);" id="modal-profile-name">Staff Member</div>
+          <div style="font-size:0.8rem; color:var(--gold-400); font-weight:600; margin-top:2px;" id="modal-profile-role">Administrator</div>
+        </div>
+      </div>
+
+      <div style="display:flex; flex-direction:column; gap:12px; font-size:0.84rem;">
+        <div style="display:flex; justify-content:space-between; padding:10px 14px; background:var(--bg-surface); border:1px solid var(--border-subtle); border-radius:var(--radius-md);">
+          <span style="color:var(--text-dim); font-weight:600;">Staff ID</span>
+          <span style="font-family:'Courier New', monospace; font-weight:700; color:var(--gold-400);" id="modal-profile-id">ADM-2026-001</span>
+        </div>
+        <div style="display:flex; justify-content:space-between; padding:10px 14px; background:var(--bg-surface); border:1px solid var(--border-subtle); border-radius:var(--radius-md);">
+          <span style="color:var(--text-dim); font-weight:600;">Institutional Email</span>
+          <span style="color:var(--text-primary); font-weight:500;" id="modal-profile-email">admin@equipvault.edu</span>
+        </div>
+        <div style="display:flex; justify-content:space-between; padding:10px 14px; background:var(--bg-surface); border:1px solid var(--border-subtle); border-radius:var(--radius-md);">
+          <span style="color:var(--text-dim); font-weight:600;">Department</span>
+          <span style="color:var(--text-primary); font-weight:500;" id="modal-profile-dept">Equipment & Facilities IT</span>
+        </div>
+        <div style="display:flex; justify-content:space-between; align-items:center; padding:10px 14px; background:var(--bg-surface); border:1px solid var(--border-subtle); border-radius:var(--radius-md);">
+          <span style="color:var(--text-dim); font-weight:600;">Session Security</span>
+          <span class="badge badge-available">Authenticated Session</span>
+        </div>
+      </div>
+
+      <div style="margin-top:20px; padding-top:16px; border-top:1px solid var(--border-subtle); display:flex; gap:10px;">
+        <button type="button" class="btn btn-secondary" style="flex:1;" data-close="modal-profile">Close</button>
+        <button type="button" class="btn btn-danger" style="flex:1;" id="btn-modal-logout">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+          Sign Out
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Toast Container -->
+<div class="toast-container" id="toast-container" aria-live="polite"></div>
+
+<script src="js/sample-data.js?v=20261027_v4"></script>
+<script src="js/storage.js?v=20261027_v4"></script>
+<script src="js/app.js?v=20261027_v4"></script>
+</body>
+</html>
